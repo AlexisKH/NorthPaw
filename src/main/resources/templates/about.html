@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('About')}"></head>
+<body>
+<header th:replace="~{fragments :: nav}"></header>
+
+<main class="container py-4">
+  <h1>About NorthPaw</h1>
+  <p>NorthPaw Distributors is a wholesale pet supplier. Independent pet stores order from us instead of
+     contacting many different manufacturers.</p>
+  <p>Right now the catalogue holds <strong th:text="${productCount}">0</strong> products from
+     <strong th:text="${brandCount}">0</strong> brands, stocked across
+     <strong th:text="${centreCount}">0</strong> distribution centres.</p>
+
+  <h2 class="h4">What this app does</h2>
+  <ul>
+    <li>Browse the catalogue for dogs, cats, birds, fish and small animals.</li>
+    <li>Filter products by brand and pet type, and sort them by name, price or date added.</li>
+    <li>Add new products and choose the distribution centre that carries them, saved in the database.</li>
+  </ul>
+  <a class="btn btn-dark" th:href="@{/products}">View products</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

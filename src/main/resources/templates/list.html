@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Products')}"></head>
+<body>
+<header th:replace="~{fragments :: nav}"></header>
+
+<main class="container py-4">
+  <h1>Products</h1>
+
+  <form method="get" th:action="@{/products}" class="row g-2 mb-3">
+    <div class="col-12">
+      <label for="q" class="form-label">Search</label>
+      <input id="q" name="q" type="search" class="form-control" th:value="${q}" placeholder="Search by product, brand or SKU">
+    </div>
+    <div class="col-md-3">
+      <label for="brandId" class="form-label">Brand</label>
+      <select id="brandId" name="brandId" class="form-select">
+        <option value="">All brands</option>
+        <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}" th:selected="${b.id == brandId}"></option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="petTypeId" class="form-label">Pet type</label>
+      <select id="petTypeId" name="petTypeId" class="form-select">
+        <option value="">All pets</option>
+        <option th:each="t : ${petTypes}" th:value="${t.id}" th:text="${t.name}" th:selected="${t.id == petTypeId}"></option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="sort" class="form-label">Sort by</label>
+      <select id="sort" name="sort" class="form-select">
+        <option value="newest" th:selected="${sort == 'newest'}">Date added</option>
+        <option value="name" th:selected="${sort == 'name'}">Name</option>
+        <option value="price" th:selected="${sort == 'price'}">Price</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="dir" class="form-label">Order</label>
+      <select id="dir" name="dir" class="form-select">
+        <option value="asc" th:selected="${dir == 'asc'}">Ascending</option>
+        <option value="desc" th:selected="${dir == 'desc'}">Descending</option>
+      </select>
+    </div>
+    <div class="col-md-1 d-flex align-items-end">
+      <button type="submit" class="btn btn-dark w-100">Go</button>
+    </div>
+  </form>
+
+  <p th:text="${variants.totalElements} + ' product(s) found' + (${q} != null ? ' for “' + ${q} + '”' : '')"></p>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr><th>Name</th><th>Brand</th><th>Pet</th><th>Category</th><th>Size</th><th>Flavour</th><th>SKU</th><th>Price</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="v : ${variants.content}">
+          <td><a th:href="@{/products/{id}(id=${v.id})}" th:text="${v.item.name}">Name</a></td>
+          <td th:text="${v.item.brand.name}">Brand</td>
+          <td th:text="${v.item.petType.name}">Dog</td>
+          <td th:text="${v.item.category.name}">Food</td>
+          <td th:text="${v.size}">2 kg</td>
+          <td th:text="${v.flavour} ?: '-'">-</td>
+          <td th:text="${v.sku}">SKU</td>
+          <td th:text="${'$' + #numbers.formatDecimal(v.unitPrice, 1, 2)}">$0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav th:if="${variants.totalPages > 1}">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${variants.first} ? 'disabled'">
+        <a class="page-link" th:href="@{/products(q=${q},brandId=${brandId},petTypeId=${petTypeId},sort=${sort},dir=${dir},page=${variants.number - 1})}">Previous</a>
+      </li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(0, variants.totalPages - 1)}"
+          th:classappend="${i == variants.number} ? 'active'">
+        <a class="page-link" th:href="@{/products(q=${q},brandId=${brandId},petTypeId=${petTypeId},sort=${sort},dir=${dir},page=${i})}" th:text="${i + 1}">1</a>
+      </li>
+      <li class="page-item" th:classappend="${variants.last} ? 'disabled'">
+        <a class="page-link" th:href="@{/products(q=${q},brandId=${brandId},petTypeId=${petTypeId},sort=${sort},dir=${dir},page=${variants.number + 1})}">Next</a>
+      </li>
+    </ul>
+  </nav>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

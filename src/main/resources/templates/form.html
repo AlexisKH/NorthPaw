@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Add Product')}"></head>
+<body>
+<header th:replace="~{fragments :: nav}"></header>
+
+<main class="container py-4" style="max-width: 640px;">
+  <h1>Add Product</h1>
+
+  <form th:action="@{/products}" th:object="${productForm}" method="post">
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Product name</label>
+      <input id="name" type="text" class="form-control" th:field="*{name}">
+      <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" rows="3" class="form-control" th:field="*{description}"></textarea>
+      <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="brandId" class="form-label">Brand</label>
+        <select id="brandId" class="form-select" th:field="*{brandId}">
+          <option value="">Choose...</option>
+          <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"></option>
+        </select>
+        <div class="text-danger" th:if="${#fields.hasErrors('brandId')}" th:errors="*{brandId}"></div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="categoryId" class="form-label">Category</label>
+        <select id="categoryId" class="form-select" th:field="*{categoryId}">
+          <option value="">Choose...</option>
+          <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+        <div class="text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="petTypeId" class="form-label">Pet type</label>
+        <select id="petTypeId" class="form-select" th:field="*{petTypeId}">
+          <option value="">Choose...</option>
+          <option th:each="t : ${petTypes}" th:value="${t.id}" th:text="${t.name}"></option>
+        </select>
+        <div class="text-danger" th:if="${#fields.hasErrors('petTypeId')}" th:errors="*{petTypeId}"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="sku" class="form-label">SKU</label>
+        <input id="sku" type="text" class="form-control" th:field="*{sku}" placeholder="ORJ-DOG-2KG">
+        <div class="text-danger" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}"></div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="size" class="form-label">Size</label>
+        <input id="size" type="text" class="form-control" th:field="*{size}" placeholder="2 kg">
+        <div class="text-danger" th:if="${#fields.hasErrors('size')}" th:errors="*{size}"></div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="flavour" class="form-label">Flavour (optional)</label>
+        <input id="flavour" type="text" class="form-control" th:field="*{flavour}">
+        <div class="text-danger" th:if="${#fields.hasErrors('flavour')}" th:errors="*{flavour}"></div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="barcode" class="form-label">Barcode (12 or 13 digits)</label>
+      <input id="barcode" type="text" class="form-control" th:field="*{barcode}">
+      <div class="text-danger" th:if="${#fields.hasErrors('barcode')}" th:errors="*{barcode}"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="unitPrice" class="form-label">Price ($)</label>
+        <input id="unitPrice" type="number" step="0.01" class="form-control" th:field="*{unitPrice}">
+        <div class="text-danger" th:if="${#fields.hasErrors('unitPrice')}" th:errors="*{unitPrice}"></div>
+      </div>
+    </div>
+
+    <fieldset class="mb-3">
+      <legend class="form-label fs-6">Carried by distribution centres (choose one or more)</legend>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="allDcs"
+               onclick="document.querySelectorAll('.dc-box').forEach(function (b) { b.checked = document.getElementById('allDcs').checked; })">
+        <label class="form-check-label fw-bold" for="allDcs">Select all</label>
+      </div>
+      <div class="form-check" th:each="d : ${centres}">
+        <input class="form-check-input dc-box" type="checkbox" th:field="*{dcIds}" th:value="${d.id}">
+        <label class="form-check-label" th:for="${#ids.prev('dcIds')}" th:text="${d.name + ' (' + d.city + ', ' + d.province + ')'}">DC</label>
+      </div>
+      <div class="text-danger" th:if="${#fields.hasErrors('dcIds')}" th:errors="*{dcIds}"></div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-dark">Save</button>
+    <a class="btn btn-secondary" th:href="@{/products}">Cancel</a>
+  </form>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

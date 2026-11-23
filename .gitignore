@@ -1,0 +1,8 @@
+target/
+data/
+uploads/
+nbproject/private/
+.idea/
+*.iml
+.vscode/
+.DS_Store

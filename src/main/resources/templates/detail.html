@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Product')}"></head>
+<body>
+<header th:replace="~{fragments :: nav}"></header>
+
+<main class="container py-4" style="max-width: 700px;">
+  <div class="alert alert-success" th:if="${saved}">Product saved to the database.</div>
+
+  <h1 th:text="${variant.item.name}">Name</h1>
+  <p class="text-muted" th:text="${variant.item.description}">Description</p>
+
+  <dl class="row">
+    <dt class="col-sm-4">Variant ID</dt><dd class="col-sm-8" th:text="${variant.id}"></dd>
+    <dt class="col-sm-4">SKU</dt><dd class="col-sm-8" th:text="${variant.sku}"></dd>
+    <dt class="col-sm-4">Barcode</dt><dd class="col-sm-8" th:text="${variant.barcode}"></dd>
+    <dt class="col-sm-4">Brand</dt><dd class="col-sm-8" th:text="${variant.item.brand.name}"></dd>
+    <dt class="col-sm-4">Category</dt><dd class="col-sm-8" th:text="${variant.item.category.name}"></dd>
+    <dt class="col-sm-4">Pet type</dt><dd class="col-sm-8" th:text="${variant.item.petType.name}"></dd>
+    <dt class="col-sm-4">Size</dt><dd class="col-sm-8" th:text="${variant.size}"></dd>
+    <dt class="col-sm-4">Flavour</dt><dd class="col-sm-8" th:text="${variant.flavour} ?: '-'"></dd>
+    <dt class="col-sm-4">Price</dt><dd class="col-sm-8" th:text="${'$' + #numbers.formatDecimal(variant.unitPrice, 1, 2)}"></dd>
+    <dt class="col-sm-4">Added</dt><dd class="col-sm-8" th:text="${#temporals.format(variant.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+  </dl>
+
+  <h2 class="h5">Carried by</h2>
+  <p th:if="${#lists.isEmpty(stock)}">No distribution centre carries this product yet.</p>
+  <ul class="list-group mb-3" th:unless="${#lists.isEmpty(stock)}">
+    <li class="list-group-item" th:each="s : ${stock}">
+      <strong th:text="${s.dc.name}">DC</strong>
+      <span class="text-muted" th:text="'- ' + ${s.dc.city} + ', ' + ${s.dc.province}">City, ON</span>
+    </li>
+  </ul>
+
+  <a class="btn btn-dark" th:href="@{/products}">Back to products</a>
+  <a class="btn btn-outline-dark" th:href="@{/products/new}">Add another</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
